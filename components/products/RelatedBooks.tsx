@@ -23,7 +23,14 @@ export default function RelatedBooks({ relatedBook }: RelatedBookProps) {
             {relatedBook?.title_bn || "No title"}
           </h2>
           <p className="text-sm text-gray-600">{relatedBook?.author_bn}</p>
-          <p className="text-sm text-gray-600 mt-5">{relatedBook?.price} Tk</p>
+          <div className="mt-5 flex gap-2 items-baseline">
+            <p className="text-sm text-red-600 line-through ">
+              {relatedBook?.price} Tk
+            </p>
+            <p className="text-md text-green-800 ">
+              {relatedBook?.discount_price} Tk
+            </p>
+          </div>
         </div>
       </div>
     </Link>

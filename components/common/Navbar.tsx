@@ -81,9 +81,6 @@ function Navbar() {
         <Link href="/signin">
           <button className="btn  btn-white">সাইন ইন</button>
         </Link>
-        <Link href="/signup">
-          <button className="btn  btn-white">সাইন আপ</button>
-        </Link>
       </div>
     </div>
   );
