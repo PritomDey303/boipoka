@@ -1,6 +1,12 @@
 import React from "react";
-
-export default function CheckOutSummery({ total, deliveryFee }) {
+interface CheckOutSummaryProps {
+  total: number;
+  deliveryFee: number;
+}
+export default function CheckOutSummery({
+  total,
+  deliveryFee,
+}: CheckOutSummaryProps) {
   return (
     <div className="p-5 text-gray-700">
       <h1 className="font-bolg text-2xl mb-5">Checkout Summary</h1>

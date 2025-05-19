@@ -11,8 +11,9 @@ interface PageProps {
   };
 }
 export default async function page({ params }: PageProps) {
-  const { id } = await params;
-  const book: Book | undefined = books.find((book) => book.id === Number(id));
+  const { id } = params;
+  const bid = parseInt(id, 10);
+  const book: Book | undefined = books.find((book) => book.id === bid);
   const relatedBooks: Book[] = getRelatedBooks(book);
   return (
     <section className="min-h-screen pt-3 pb-10">
