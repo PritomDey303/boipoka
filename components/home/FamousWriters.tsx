@@ -47,10 +47,10 @@ export default function FamousWriters() {
           const imageSrc = fallbacks[writer.id] ? defaultImage : writer.image;
           return (
             <div key={writer.id} className="text-center px-3">
-              <div className="relative w-24 h-24 mx-auto mb-2">
+              <div className="relative w-24 h-24 md:w-30 md:h-30 mx-auto mb-2">
                 <Image
                   src={imageSrc}
-                  alt={writer.name}
+                  alt={writer?.name}
                   fill
                   className="rounded-full object-cover border-2 border-gray-300"
                   onError={() => handleImageError(writer.id)}
