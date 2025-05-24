@@ -7,34 +7,21 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaArrowRight } from "react-icons/fa";
 import BookCard from "../common/BookCard";
-
-interface Book {
-  id: number;
-  title_bn: string;
-  title_en: string;
-  author_bn: string;
-  author_en: string;
-  category: string;
-  tags: string[];
-  price: number;
-  discount_price: number;
-  language: string;
-  cover_image: string;
-  description: string;
-  publication: string;
-}
-
-interface BooksPreviewProps {
-  title: string;
-  category: string;
-  books: Book[];
-}
+import { BooksPreviewProps } from "@/interfaces/interface";
+import { useGetBooksQuery } from "@/redux/api/bookApi";
 
 export default function BooksPreview({
   title,
-  category,
-  books,
+  search,
+  dataFrom,
 }: BooksPreviewProps) {
+  const { data } = useGetBooksQuery({
+    search: search,
+    data_from: dataFrom,
+    limit: 10,
+    price: "asc",
+  });
+
   const settings = {
     dots: false,
     infinite: true,
@@ -57,15 +44,15 @@ export default function BooksPreview({
       <div className="flex gap-3 justify-start items-center">
         <h1 className="text-xl md:text-3xl font-bold">{title}</h1>
         <Link
-          href={`/products?search=${category}&data_from=category&page=1`}
+          href={`/products?search=${search}&data_from=${dataFrom}`}
           className="link link-hover flex justify-center items-center text-blue-500 gap-1 text-xs md:text-lg"
         >
           <span>সবগুলো দেখুন</span> <FaArrowRight />
         </Link>
       </div>
       <Slider {...settings} className="py-8">
-        {books.map((book) => (
-          <div key={book.id} className="px-2">
+        {data?.map((book) => (
+          <div key={book._id} className="px-2">
             <BookCard book={book} />
           </div>
         ))}

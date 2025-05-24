@@ -11,7 +11,7 @@ interface BookCardProps {
 export default function BookCard({ book }: BookCardProps) {
   return (
     <div className="relative group">
-      <Link href={`/products/${book?.id}`}>
+      <Link href={`/products/${book?._id}`}>
         <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out overflow-hidden flex flex-col h-full border border-gray-300">
           <figure className="relative w-full h-40 sm:h-48 md:h-56 overflow-hidden">
             <Image

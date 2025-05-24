@@ -19,7 +19,7 @@ function Navbar() {
       router.push(
         `/products?search=${encodeURIComponent(
           search.trim()
-        )}&data_from=search&page=1`
+        )}&data_from=searchbox`
       );
     }
   };

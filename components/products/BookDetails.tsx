@@ -36,9 +36,13 @@ export default function BookDetails({ book }: BookDetailsProps) {
           <p>: {book?.language}</p>
         </div>
         {/* price */}
-        <div className="flex gap-4 text-gray-700 text-lg align-items-center my-2">
+        <div className="flex gap-4 text-gray-700 text-lg items-baseline my-2">
           <p>প্রাইস</p>
-          <p>: {book?.price} Taka </p>
+          <p>:</p>
+          <p className="line-through text-error text-sm"> {book?.price} Tk </p>
+          <p className="text-green-600 font-semibold">
+            {book?.discount_price} Tk
+          </p>
         </div>
         {/* description */}
         <div className="flex gap-4 text-gray-700 text-lg align-items-center my-2 text-justify">

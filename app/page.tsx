@@ -20,14 +20,30 @@ export default function Home() {
     <div className="py-3">
       <Hero />
       <FamousWriters />
-      <BooksPreview title="নতুন বইসমুহ" category="Novel" books={books} />
+      <BooksPreview
+        title="নতুন বইসমুহ"
+        dataFrom="category"
+        search="Novel"
+        books={books}
+      />
       <BooksPreview
         title="বেস্ট সেলার"
-        category="best seller"
+        dataFrom="tags"
+        search="best seller"
         books={bestSellerBooks}
       />
-      <BooksPreview title="উপন্যাস" category="Novel" books={novels} />
-      <BooksPreview title="নাটক" category="Drama" books={dramaBooks} />
+      <BooksPreview
+        title="উপন্যাস"
+        search="Novel"
+        dataFrom="category"
+        books={novels}
+      />
+      <BooksPreview
+        title="নাটক"
+        search="Drama"
+        dataFrom="category"
+        books={dramaBooks}
+      />
     </div>
   );
 }
