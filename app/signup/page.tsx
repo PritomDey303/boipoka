@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
+import { useCreateUserMutation } from "@/redux/api/authApi";
 
 type FormData = {
   name: string;
@@ -14,21 +15,34 @@ type FormData = {
 };
 
 export default function Page() {
+  const [createUser, { isLoading }] = useCreateUserMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
   } = useForm<FormData>();
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const password = watch("password");
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log("Form Data:", data);
-    alert("Signup successful!");
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const message = await createUser(data).unwrap();
+      setSuccess(message);
+      setErrorMessage(null);
+      reset();
+      setTimeout(() => setSuccess(null), 3000);
+    } catch (err) {
+      setErrorMessage(err as string);
+      setSuccess(null);
+      setTimeout(() => setErrorMessage(null), 3000);
+    }
   };
 
   return (
@@ -40,12 +54,12 @@ export default function Page() {
           Sign In here.
         </Link>
       </p>
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
         className="space-y-5 text-gray-700"
       >
-        {/* Name */}
         <div className="form-control">
           <label className="label font-medium">Name</label>
           <input
@@ -58,7 +72,6 @@ export default function Page() {
           )}
         </div>
 
-        {/* Email */}
         <div className="form-control">
           <label className="label font-medium">Email</label>
           <input
@@ -77,7 +90,6 @@ export default function Page() {
           )}
         </div>
 
-        {/* Mobile */}
         <div className="form-control">
           <label className="label font-medium">
             Mobile Number (with country code)
@@ -98,9 +110,7 @@ export default function Page() {
           )}
         </div>
 
-        {/* Password and Confirm Password Row */}
         <div className="flex flex-col lg:flex-row gap-4">
-          {/* Password */}
           <div className="form-control relative flex-1">
             <label className="label font-medium">Password</label>
             <input
@@ -127,7 +137,6 @@ export default function Page() {
             )}
           </div>
 
-          {/* Confirm Password */}
           <div className="form-control relative flex-1">
             <label className="label font-medium">Confirm Password</label>
             <input
@@ -158,16 +167,24 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Submit Button */}
         <div>
           <button
             type="submit"
             className="btn btn-primary w-full bg-blue-950 text-white hover:bg-blue-900 transition"
+            disabled={isLoading}
           >
-            Sign Up
+            {isLoading ? "Signing up..." : "Sign Up"}
           </button>
         </div>
       </form>
+      <div className="my-5">
+        {success && (
+          <p className="text-green-600 text-center mb-4">{success}</p>
+        )}
+        {errorMessage && (
+          <p className="text-red-600 text-center mb-4">{errorMessage}</p>
+        )}
+      </div>
     </div>
   );
 }

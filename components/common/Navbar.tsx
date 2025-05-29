@@ -7,10 +7,14 @@ import { IoSearch } from "react-icons/io5";
 import Logo from "@/public/logo/logo.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import { useSignoutMutation } from "@/redux/api/authApi";
 function Navbar() {
   const router = useRouter();
+  const { isAuthenticated, isLoading } = useAuth();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [signout] = useSignoutMutation();
   //handle submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +26,11 @@ function Navbar() {
         )}&data_from=searchbox`
       );
     }
+  };
+
+  //handle signout
+  const handleSignOut = async () => {
+    await signout({});
   };
 
   return (
@@ -78,9 +87,16 @@ function Navbar() {
           <FaUser className="text-2xl transition-transform duration-200 ease-in-out hover:scale-125" />
           <span className="block md:hidden">প্রোফাইল</span>
         </Link>
-        <Link href="/signin">
-          <button className="btn  btn-white">সাইন ইন</button>
-        </Link>
+        {!isAuthenticated && !isLoading && (
+          <Link href="/signin">
+            <button className="btn  btn-white">সাইন ইন</button>
+          </Link>
+        )}
+        {isAuthenticated && !isLoading && (
+          <button className="btn  btn-white" onClick={handleSignOut}>
+            সাইন আউট
+          </button>
+        )}
       </div>
     </div>
   );

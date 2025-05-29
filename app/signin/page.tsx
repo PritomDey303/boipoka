@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
+import { useSigninMutation } from "@/redux/api/authApi";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type SignInFormInputs = {
   email: string;
@@ -11,19 +14,32 @@ type SignInFormInputs = {
 };
 
 export default function Page() {
+  const router = useRouter();
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormInputs>();
+  const [signin, { isError, isSuccess, error }] = useSigninMutation();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<SignInFormInputs> = (data) => {
-    console.log("Sign In Data:", data);
-    // Add login logic here
+  const onSubmit: SubmitHandler<SignInFormInputs> = async (data) => {
+    try {
+      const res = await signin(data).unwrap();
+      console.log(res.user);
+      toast.success("Signin successful!");
+    } catch (err) {
+      console.log(err);
+    }
   };
-
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+      router.push("/");
+    }
+  }, [isSuccess, reset, router]);
   return (
     <div className="w-11/12 max-w-md mx-auto p-8 bg-base-100 shadow-xl rounded-xl mt-10">
       <h2 className="text-3xl font-bold mb-2 text-center text-primary">
@@ -76,7 +92,6 @@ export default function Page() {
               placeholder="•••••••"
               className="input input-bordered w-full pr-12 focus:outline-none focus:ring-0"
             />
-            {/* Eye icon: stays visible on focus */}
             <div className="absolute inset-y-0 right-3 flex items-center">
               <button
                 type="button"
@@ -97,10 +112,16 @@ export default function Page() {
         <div>
           <button
             type="submit"
-            className="btn btn-primary w-full text-white font-semibold"
+            className="btn bg-blue-950 w-full hover:bg-blue-900 text-white font-semibold"
           >
             Sign In
           </button>
+        </div>
+
+        {/* success and error message */}
+        <div className="flex justify-center">
+          {isError && <p className="text-error">Invalid Credentials!</p>}
+          {isSuccess && <p className="text-success">Login successful!</p>}
         </div>
       </form>
     </div>

@@ -1,41 +1,46 @@
+// services/bookApi.ts
+import { baseApi } from "./baseApi";
 import { Book, BookSearchParams } from "@/interfaces/interface";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const bookApi = createApi({
-    reducerPath: 'bookApi',
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/api/books',
-    }),
-    tagTypes: ['Books', 'Book'],
+export const bookApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        //get books by tags and category
+        // Get books by search/tag/category
         getBooks: builder.query<Book[], BookSearchParams>({
             query: ({ search, data_from, limit, price }) => {
-
                 const params = new URLSearchParams({
                     search,
                     data_from,
-                    limit: limit?.toString(),
-                    price
-                })
-
-                return `/search?${params}`
+                    limit: limit?.toString() || "",
+                    price,
+                });
+                return `books/search?${params.toString()}`;
             },
-            transformResponse: (response: { message: string; data: Book[] }) => response.data, providesTags: ['Books']
+            transformResponse: (response: { message: string; data: Book[] }) =>
+                response.data,
+            providesTags: ["Books"],
         }),
-        //get book by id
+
+        // Get book by ID
         getBooksById: builder.query<Book, string>({
-            query: (id) => `/book/${id}`,
-            transformResponse: (response: { message: string; data: Book }) => response.data,
+            query: (id) => `books/book/${id}`,
+            transformResponse: (response: { message: string; data: Book }) =>
+                response.data,
+            providesTags: (result, error, id) => [{ type: "Book", id }],
         }),
-        //related books
+
+        // Related books
         getRelatedBooks: builder.query<Book[], string>({
-            query: (id) => `/related/${id}`,
-            transformResponse: (response: { message: string; data: Book[] }) => response.data,
-
-
-        })
+            query: (id) => `books/related/${id}`,
+            transformResponse: (response: { message: string; data: Book[] }) =>
+                response.data,
+            providesTags: ["Books"],
+        }),
     }),
+    overrideExisting: true,
 });
 
-export const { useGetBooksQuery, useGetBooksByIdQuery, useGetRelatedBooksQuery } = bookApi;
+export const {
+    useGetBooksQuery,
+    useGetBooksByIdQuery,
+    useGetRelatedBooksQuery,
+} = bookApi;

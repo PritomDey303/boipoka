@@ -2,13 +2,15 @@
 import React, { useState } from "react";
 import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "@/hooks/useCart";
 
 type CartCardProps = {
-  id: number;
+  id: string;
   title: string;
   author: string;
   price: number;
   discountPrice: number;
+  quantity: number;
 };
 
 export default function CartCard({
@@ -17,8 +19,16 @@ export default function CartCard({
   author,
   price,
   discountPrice,
+  quantity,
 }: CartCardProps) {
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantityNumber, setQuantityNumber] = useState<number>(quantity);
+  const { handleUpdateCart } = useCart();
+
+  const handleQuantityChange = (value: number) => {
+    const newQuantity = Math.max(1, value);
+    setQuantityNumber(newQuantity);
+    handleUpdateCart({ bookId: id, quantity: newQuantity });
+  };
 
   return (
     <div className="flex items-center justify-between gap-6 rounded-md shadow-md px-5 py-4 bg-white mb-4">
@@ -34,10 +44,8 @@ export default function CartCard({
         <input
           type="number"
           id={`quantity-${id}`}
-          value={quantity}
-          onChange={(e) =>
-            setQuantity(Math.max(1, parseInt(e.target.value) || 1))
-          }
+          value={quantityNumber}
+          onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
           min={1}
           max={99}
           className="w-16 border border-gray-300 rounded px-2 py-1 text-sm"
@@ -46,10 +54,10 @@ export default function CartCard({
 
       <div className="text-right min-w-[80px]">
         <p className="text-md font-semibold text-green-600">
-          ৳{discountPrice * quantity}
+          ৳{discountPrice * quantityNumber}
         </p>
         <p className="text-xs line-through text-gray-400">
-          ৳{price * quantity}
+          ৳{price * quantityNumber}
         </p>
       </div>
 

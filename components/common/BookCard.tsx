@@ -1,3 +1,4 @@
+import { useCart } from "@/hooks/useCart";
 import { Book } from "@/interfaces/interface";
 import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
@@ -9,6 +10,7 @@ interface BookCardProps {
 }
 
 export default function BookCard({ book }: BookCardProps) {
+  const { handleAddtoCart } = useCart();
   return (
     <div className="relative group">
       <Link href={`/products/${book?._id}`}>
@@ -54,6 +56,7 @@ export default function BookCard({ book }: BookCardProps) {
         <button
           className="bg-white p-1 rounded-full shadow hover:bg-green-100 cursor-pointer"
           aria-label="Add to cart"
+          onClick={() => handleAddtoCart({ bookId: book?._id, quantity: 1 })}
         >
           <ShoppingCart className="h-5 w-5 text-green-600" />
         </button>

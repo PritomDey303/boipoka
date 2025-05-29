@@ -1,4 +1,6 @@
 "use client";
+
+import React from "react";
 import BookDetails from "@/components/products/BookDetails";
 import RelatedBooks from "@/components/products/RelatedBooks";
 import Review from "@/components/products/Review";
@@ -7,35 +9,27 @@ import {
   useGetBooksByIdQuery,
   useGetRelatedBooksQuery,
 } from "@/redux/api/bookApi";
-import React from "react";
+import { useParams } from "next/navigation";
+import AuthLoader from "@/components/Loaders/AuthLoader";
 
-export default function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default function Page() {
+  const { id } = useParams();
   const { data: book, isLoading, error } = useGetBooksByIdQuery(id);
   const { data: relatedBooks } = useGetRelatedBooksQuery(id);
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-2xl text-blue-600">Loading book details...</p>
-      </div>
-    );
+    return <AuthLoader />;
   }
-
   if (!book || error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-2xl text-red-600">Book not found.</p>
-      </div>
-    );
+    return <div>Error</div>;
   }
 
   return (
-    <section className="min-h-screen pt-3 pb-10">
-      <div className="w-9/10 md:w-8/10 bg-white mx-auto rounded-2xl shadow-xl mt-10 py-10 px-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <section className="min-h-screen pt-5 pb-12">
+      {/* Book Info & Related Books */}
+      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 bg-white rounded-2xl shadow-xl py-8">
         <BookDetails book={book} />
-        <div className="w-full p-5 rounded-lg">
-          <h1 className="font-bold text-xl md:text-2xl mb-5">Related Books</h1>
+        <div className="md:col-span-1 p-4">
+          <h1 className="font-bold text-xl md:text-2xl mb-4">Related Books</h1>
           <div className="grid gap-3">
             {relatedBooks?.map((relatedBook, index) => (
               <RelatedBooks key={index} relatedBook={relatedBook} />
@@ -43,7 +37,9 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
         </div>
       </div>
-      <div className="w-9/10 md:w-8/10 bg-white mx-auto rounded-2xl shadow-xl mt-10 py-10 px-5">
+
+      {/* Review Section */}
+      <div className="container mx-auto shadow-2xl mt-10">
         <Review id={book._id} />
       </div>
     </section>

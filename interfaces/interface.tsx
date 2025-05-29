@@ -24,7 +24,6 @@ export interface BooksPreviewProps {
   title: string;
   search: string;
   dataFrom: string;
-  books: Book[];
 }
 
 export interface ReviewUser {
@@ -41,4 +40,12 @@ export interface Review {
   comment: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  mobile: string;
+  password: string;
 }

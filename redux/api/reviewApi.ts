@@ -1,17 +1,25 @@
 import { Review } from "@/interfaces/interface";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "./baseApi";
 
-export const reviewApi = createApi({
-    reducerPath: "reviewApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:5000/api/review",
-    }),
+export const reviewApi = baseApi.injectEndpoints({
+
     endpoints: (builder) => ({
-        getReviews: builder.query<Review[], string>({
-            query: (id) => `/${id}`,
+        //get review
+        getReviews: builder.query({
+            query: (id) => `review/${id}`,
             transformResponse: (response: { message: string; data: Review[] }) => response.data,
+            providesTags: ['Review']
         }),
+        //add review
+        addReview: builder.mutation({
+            query: (data) => ({
+                url: 'review/add',
+                method: "POST",
+                body: data
+            }),
+            invalidatesTags: ['Review']
+        })
     }),
 });
 
-export const { useGetReviewsQuery } = reviewApi;
+export const { useGetReviewsQuery, useAddReviewMutation } = reviewApi;

@@ -6,6 +6,7 @@ import Footer from "@/components/common/Footer";
 import SearchBarMobile from "@/components/common/SearchBarMobile";
 
 import ReduxProvider from "@/components/providers/ReduxProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "বইপোকা",
@@ -26,6 +27,7 @@ export default function RootLayout({
           <SearchBarMobile />
           <main className="min-h-screen bg-gray-200">{children}</main>
           <Footer />
+          <Toaster richColors position="top-right" />
         </body>
       </ReduxProvider>
     </html>

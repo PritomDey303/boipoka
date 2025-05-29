@@ -1,14 +1,17 @@
-import { bookApi } from "@/redux/api/bookApi";
-import { reviewApi } from "@/redux/api/reviewApi";
-import { configureStore } from "@reduxjs/toolkit";
 
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from '@/redux/features/authSlice'
+import { cartReducer } from "@/redux/features/cartSlice";
+import { baseApi } from "@/redux/api/baseApi";
 export const store = configureStore({
     reducer: {
-        [bookApi.reducerPath]: bookApi.reducer,
-        [reviewApi.reducerPath]: reviewApi.reducer
+        auth: authReducer,
+        cart: cartReducer,
+        [baseApi.reducerPath]: baseApi.reducer,
+
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(bookApi.middleware, reviewApi.middleware)
+        getDefaultMiddleware().concat(baseApi.middleware)
 
 })
 

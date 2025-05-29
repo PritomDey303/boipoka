@@ -1,3 +1,4 @@
+import { useCart } from "@/hooks/useCart";
 import { Book } from "@/interfaces/interface";
 import Image from "next/image";
 import React from "react";
@@ -6,6 +7,7 @@ interface BookDetailsProps {
   book: Book | undefined;
 }
 export default function BookDetails({ book }: BookDetailsProps) {
+  const { handleAddtoCart } = useCart();
   return (
     <div className="col-span-2 flex flex-col  md:flex-row gap-5 p-2">
       <div className="relative w-full md:w-2/5 aspect-[2/3]">
@@ -54,7 +56,12 @@ export default function BookDetails({ book }: BookDetailsProps) {
           <button className="btn btn-outline btn-warning">
             Add to Wishlist
           </button>
-          <button className="btn btn-outline btn-error">Add to Cart</button>
+          <button
+            className="btn btn-outline btn-error"
+            onClick={() => handleAddtoCart({ bookId: book?._id, quantity: 1 })}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
     </div>
